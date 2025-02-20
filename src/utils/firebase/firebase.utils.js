@@ -36,7 +36,7 @@ export const db = getFirestore()
 
 export async function createUserDocumentFromAuth(userAuth) {
 	const userDocRef = doc(db, 'users', userAuth.uid)
-	console.log(userDocRef)
+	console.log(userAuth)
 	// abaixo vamos verificar a existencia do documento na colecao
 	const userSnapShot = await getDoc(userDocRef)
 	console.log(userSnapShot)
