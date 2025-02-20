@@ -12,12 +12,12 @@ import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-	apiKey: 'AIzaSyCPRzjV-PhLfD13PPnvSuUJ_HY8_lzy5Jw',
-	authDomain: 'e-comm-shop-db.firebaseapp.com',
-	projectId: 'e-comm-shop-db',
-	storageBucket: 'e-comm-shop-db.firebasestorage.app',
-	messagingSenderId: '429963828255',
-	appId: '1:429963828255:web:f6f50594725fcdb316492a',
+	apiKey: process.env.REACT_APP_FB_API_KEY,
+	authDomain: process.env.REACT_APP_FB_AUTH_DOMAIN,
+	projectId: process.env.REACT_APP_FB_PROJECT_ID,
+	storageBucket: process.env.REACT_APP_FB_STORAGE_BUCKET,
+	messagingSenderId: process.env.REACT_APP_FB_MESSAGING_SENDER_ID,
+	appId: process.env.REACT_APP_FB_APP_ID,
 }
 
 // Initialize Firebase
