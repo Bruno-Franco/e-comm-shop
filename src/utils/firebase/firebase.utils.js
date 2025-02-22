@@ -4,9 +4,9 @@ import { initializeApp } from 'firebase/app'
 // https://firebase.google.com/docs/web/setup#available-libraries
 import {
 	getAuth,
-	signInWithRedirect,
 	signInWithPopup,
 	GoogleAuthProvider,
+	createUserWithEmailAndPassword,
 } from 'firebase/auth'
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
@@ -28,13 +28,17 @@ provider.setCustomParameters({
 	prompt: 'select_account',
 })
 
-export const auth = getAuth()
+export const auth = getAuth(firebaseApp)
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider)
 
 // fireStore
 export const db = getFirestore()
 
-export async function createUserDocumentFromAuth(userAuth) {
+export async function createUserDocumentFromAuth(
+	userAuth,
+	additionalInfo = {}
+) {
+	if (!userAuth) return
 	const userDocRef = doc(db, 'users', userAuth.uid)
 	console.log(userAuth)
 	// abaixo vamos verificar a existencia do documento na colecao
@@ -47,11 +51,33 @@ export async function createUserDocumentFromAuth(userAuth) {
 		const createdAt = new Date()
 
 		try {
-			await setDoc(userDocRef, { displayName, email, createdAt })
+			await setDoc(userDocRef, {
+				displayName,
+				email,
+				createdAt,
+				...additionalInfo,
+			})
 		} catch (error) {
 			console.log(`Error creating the user with error - ${error}`)
 		}
 	}
 
 	return userDocRef
+}
+
+export async function createAuthUserWithEmailAndPassword(email, password) {
+	if (!email || !password) return
+
+	return await createUserWithEmailAndPassword(auth, email, password)
+	// if (response) {
+	// 	const { uid, email } = response.user
+	// 	const createdAt = new Date()
+	// 	console.log(uid, email, createdAt)
+	// 	try {
+	// 		const userDocRef = doc(db, 'users', uid)
+	// 		await setDoc(userDocRef, { email, createdAt })
+	// 	} catch (error) {
+	// 		console.log(`Error creating the user with error - ${error}`)
+	// 	}
+	// }
 }
