@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
-import { signInUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils'
+import {
+	signInUserWithEmailAndPassword,
+	signInWithGooglePopup,
+	createUserDocumentFromAuth,
+} from '../../utils/firebase/firebase.utils'
 
 function SignInForm() {
 	const initialFormState = {
@@ -11,10 +15,24 @@ function SignInForm() {
 	const [formFields, SetFormFields] = useState(initialFormState)
 	const { email, password } = formFields
 
-	function handleSubmit(event) {
+	async function logGoogleUser() {
+		try {
+			const { user } = await signInWithGooglePopup()
+			await createUserDocumentFromAuth(user)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	async function handleSubmit(event) {
 		event.preventDefault()
 		const { email, password } = formFields
-		signInUserWithEmailAndPassword(email, password)
+		try {
+			await signInUserWithEmailAndPassword(email, password)
+			SetFormFields(initialFormState)
+		} catch (error) {
+			console.log(error)
+		}
 	}
 	function handleChange(event) {
 		const { name, value } = event.target
@@ -23,30 +41,41 @@ function SignInForm() {
 
 	return (
 		<div className='sign-up-container'>
+			<h2>Already have an account?</h2>
+			<span>Sign In with your email and password!</span>
 			<form onSubmit={handleSubmit}>
 				<FormInput
-					htmlFor='email'
+					htmlFor='sign-in-email'
 					label='Email'
 					type='email'
 					required
 					name='email'
-					id='email'
+					id='sign-in-email'
 					onChange={handleChange}
 					value={email}
 					autoComplete='email'
 				/>
 				<FormInput
-					htmlFor='password'
+					htmlFor='sign-in-password'
 					label='Password'
 					type='password'
 					required
 					name='password'
-					id='password'
+					id='sign-in-password'
 					onChange={handleChange}
 					value={password}
 					autoComplete='password'
 				/>
-				<Button>Sign In</Button>
+				<div className='buttons-container'>
+					<Button>Sign In</Button>
+					<Button
+						type='button'
+						onClick={logGoogleUser}
+						buttonType='google'
+					>
+						Google Sign In
+					</Button>
+				</div>
 			</form>
 		</div>
 	)
