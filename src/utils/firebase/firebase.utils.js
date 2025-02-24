@@ -7,6 +7,7 @@ import {
 	signInWithPopup,
 	GoogleAuthProvider,
 	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
@@ -69,15 +70,16 @@ export async function createAuthUserWithEmailAndPassword(email, password) {
 	if (!email || !password) return
 
 	return await createUserWithEmailAndPassword(auth, email, password)
-	// if (response) {
-	// 	const { uid, email } = response.user
-	// 	const createdAt = new Date()
-	// 	console.log(uid, email, createdAt)
-	// 	try {
-	// 		const userDocRef = doc(db, 'users', uid)
-	// 		await setDoc(userDocRef, { email, createdAt })
-	// 	} catch (error) {
-	// 		console.log(`Error creating the user with error - ${error}`)
-	// 	}
-	// }
+}
+
+export async function signInUserWithEmailAndPassword(email, password) {
+	try {
+		const response = await signInWithEmailAndPassword(auth, email, password)
+		console.log(response)
+	} catch (error) {
+		if (error.code === 'auth/invalid-credential') {
+			alert('Invalid credentials!')
+		}
+		console.log(error)
+	}
 }
