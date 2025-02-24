@@ -8,6 +8,8 @@ import {
 	GoogleAuthProvider,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	signOut,
+	onAuthStateChanged,
 } from 'firebase/auth'
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
 
@@ -75,12 +77,25 @@ export async function createAuthUserWithEmailAndPassword(email, password) {
 export async function signInUserWithEmailAndPassword(email, password) {
 	if (!email || !password) return
 	try {
-		const response = await signInWithEmailAndPassword(auth, email, password)
-		console.log(response)
+		return await signInWithEmailAndPassword(auth, email, password)
 	} catch (error) {
 		if (error.code === 'auth/invalid-credential') {
 			alert(`Invalid credentials! Error - ${error.message}`)
 		}
 		console.log(error)
 	}
+}
+
+export async function signOutUser() {
+	try {
+		const response = await signOut(auth)
+		console.log(response)
+		return response
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+export function onAuthStateChangedListener(callback) {
+	return onAuthStateChanged(auth, callback)
 }

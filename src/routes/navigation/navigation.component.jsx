@@ -1,9 +1,13 @@
-import { Fragment } from 'react' // fragment permite criar um elemento nao renderizado na pagina
+import { Fragment, useContext } from 'react' // fragment permite criar um elemento nao renderizado na pagina
+import { UserContext } from '../../contexts/user.context'
 import { Outlet, Link } from 'react-router'
+import { signOutUser } from '../../utils/firebase/firebase.utils'
 import { ReactComponent as CrwLogo } from '../../assets/crown.svg' // importa um 'logo' como um componente diretamente
 import './navigation.styles.scss'
 
 function Navigation() {
+	const { currentUser } = useContext(UserContext)
+
 	return (
 		<Fragment>
 			<div className='navigation'>
@@ -14,9 +18,15 @@ function Navigation() {
 					<Link className='nav-link' to='/shop'>
 						SHOP
 					</Link>
-					<Link className='nav-link' to='auth'>
-						SIGN IN
-					</Link>
+					{currentUser ? (
+						<span className='nav-link' onClick={signOutUser}>
+							SIGN OUT
+						</span>
+					) : (
+						<Link className='nav-link' to='auth'>
+							SIGN IN
+						</Link>
+					)}
 				</div>
 			</div>
 			<Outlet />

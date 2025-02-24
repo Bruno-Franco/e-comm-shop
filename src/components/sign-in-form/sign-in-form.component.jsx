@@ -4,7 +4,6 @@ import Button from '../button/button.component'
 import {
 	signInUserWithEmailAndPassword,
 	signInWithGooglePopup,
-	createUserDocumentFromAuth,
 } from '../../utils/firebase/firebase.utils'
 
 function SignInForm() {
@@ -12,13 +11,13 @@ function SignInForm() {
 		email: '',
 		password: '',
 	}
+
 	const [formFields, SetFormFields] = useState(initialFormState)
 	const { email, password } = formFields
 
 	async function logGoogleUser() {
 		try {
-			const { user } = await signInWithGooglePopup()
-			await createUserDocumentFromAuth(user)
+			await signInWithGooglePopup()
 		} catch (error) {
 			console.log(error)
 		}
@@ -29,6 +28,7 @@ function SignInForm() {
 		const { email, password } = formFields
 		try {
 			await signInUserWithEmailAndPassword(email, password)
+
 			SetFormFields(initialFormState)
 		} catch (error) {
 			console.log(error)

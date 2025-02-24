@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
+
 import './sign-up-form.styles.scss'
 import {
 	createAuthUserWithEmailAndPassword,
@@ -18,6 +19,7 @@ function SignUpForm() {
 	const [formFields, setFormFields] = useState(defaultFormFilds)
 	const { displayName, email, password, confirmPassword } = formFields
 	const [errorField, setErrorField] = useState('')
+
 	// console.log(formFields)
 
 	async function handleSubmit(event) {
