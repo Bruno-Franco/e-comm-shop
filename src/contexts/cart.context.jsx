@@ -19,11 +19,14 @@ export function CartProvider({ children }) {
 
 	useEffect(() => {
 		let total = 0
-		let totalCost = 0
 		cartItems.map((item) => (total += item.quantity))
+		setCartCount(total)
+	}, [cartItems])
+
+	useEffect(() => {
+		let totalCost = 0
 		cartItems.map((item) => (totalCost += item.quantity * item.price))
 		setTotalCart(totalCost)
-		setCartCount(total)
 	}, [cartItems])
 
 	function addItemToCart(productToAdd) {
